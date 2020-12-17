@@ -35,11 +35,18 @@ cm <- table(test_set[, 3], y_pred)
 library(ElemStatLearn)
 set <- training_set
 X1 <- seq(min(set[,1]) - 1, max(set[,1]) + 1, by = 0.01)
-X2 <- seq(min(set[,1]) - 1, max(set[,1]) + 1, by = 0.01)
+X2 <- seq(min(set[,2]) - 1, max(set[,2]) + 1, by = 0.01)
 grid_set <- expand.grid(X1,X2)
 colnames(grid_set) = c("Age","EstimatedSalary")
 prob_set <- predict(classifier, type = "response", newdata = grid_set)
 y_grid <- ifelse(prob_set > 0.5, 1, 0)
+
+library(ggplot2)
+ggplot() + 
+  geom_point(aes(x = grid_set$Age, y = grid_set$EstimatedSalary), colour = ifelse(y_grid == 1, "springgreen3", "tomato"),size = 0.1) +
+  geom_point(aes(x = set$Age, y = set$EstimatedSalary), fill = ifelse(set[, 3] == 1, "green4", "red3"), size = 2, shape = 21) +
+  xlab("Age") + ylab("Estimated Salary")
+
 plot(set[, -3],
      main = "logistic regresssion (training set)",
      xlab = "Age" , ylab = "Estimated Salary",
@@ -49,6 +56,23 @@ contour(X1,X2,matrix(as.numeric(y_grid), length(X1), length(X2)), add = TRUE)
 points(grid_set, pch = ".", col = ifelse(y_grid == 1, "springgreen3", "tomato"))
 points(set, pch = 21, bg = ifelse(set[, 3] == 1, "green4", "red3"))
 
+# visualise the results for the test set
+library(ElemStatLearn)
+set <- test_set
+X1 <- seq(min(set[,1]) - 1, max(set[,1]) + 1, by = 0.01)
+X2 <- seq(min(set[,2]) - 1, max(set[,2]) + 1, by = 0.01)
+grid_set <- expand.grid(X1,X2)
+colnames(grid_set) = c("Age","EstimatedSalary")
+prob_set <- predict(classifier, type = "response", newdata = grid_set)
+y_grid <- ifelse(prob_set > 0.5, 1, 0)
+plot(set[, -3],
+     main = "logistic regresssion (Test set)",
+     xlab = "Age" , ylab = "Estimated Salary",
+     xlim = range(X1), ylim = range(X2))
+
+contour(X1,X2,matrix(as.numeric(y_grid), length(X1), length(X2)), add = TRUE)
+points(grid_set, pch = ".", col = ifelse(y_grid == 1, "springgreen3", "tomato"))
+points(set, pch = 21, bg = ifelse(set[, 3] == 1, "green4", "red3"))
 
 
 
