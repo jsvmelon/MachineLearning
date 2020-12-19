@@ -4,6 +4,9 @@
 dataset <- read.csv("Social_Network_Ads.csv")
 dataset <- dataset[, 3:5] # this is just an example we might need from time to time
 
+# encode the target feature as factor
+dataset$Purchased <- as.factor(dataset$Purchased)
+
 # split the dataset in training and test set
 library(caTools)
 set.seed(123)
