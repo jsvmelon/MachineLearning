@@ -18,13 +18,8 @@ test_set[,1:2] <- scale(test_set[,1:2])
 # Fitting XY to the training set
 # classifier <- 
 
-# Predicting the test set results
-prob_pred <- predict(classifier, 
-                     type = "response",
-                     newdata = test_set[-3])
-
 # normalise predictions to be 0 or 1 instead of the probability
-y_pred <- ifelse(prob_pred > 0.5, 1, 0) 
+y_pred <- predict(classifier, newdata = test_set[-3])
 
 # making the confusion matrix
 cm <- table(test_set[, 3], y_pred)
@@ -36,8 +31,7 @@ X1 <- seq(min(set[,1]) - 1, max(set[,1]) + 1, by = 0.01)
 X2 <- seq(min(set[,2]) - 1, max(set[,2]) + 1, by = 0.01)
 grid_set <- expand.grid(X1,X2)
 colnames(grid_set) = c("Age","EstimatedSalary")
-prob_set <- predict(classifier, type = "response", newdata = grid_set)
-y_grid <- ifelse(prob_set > 0.5, 1, 0)
+y_grid <- y_pred <- predict(classifier, newdata = grid_set[-3])
 
 plot(set[, -3],
      main = "logistic regresssion (training set)",
@@ -55,8 +49,7 @@ X1 <- seq(min(set[,1]) - 1, max(set[,1]) + 1, by = 0.01)
 X2 <- seq(min(set[,2]) - 1, max(set[,2]) + 1, by = 0.01)
 grid_set <- expand.grid(X1,X2)
 colnames(grid_set) = c("Age","EstimatedSalary")
-prob_set <- predict(classifier, type = "response", newdata = grid_set)
-y_grid <- ifelse(prob_set > 0.5, 1, 0)
+y_grid <- y_pred <- predict(classifier, newdata = grid_set[-3])
 plot(set[, -3],
      main = "logistic regresssion (Test set)",
      xlab = "Age" , ylab = "Estimated Salary",
