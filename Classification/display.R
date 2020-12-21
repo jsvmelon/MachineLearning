@@ -17,15 +17,18 @@ display <- function(set,title) {
 }
 
 display_ggplot2 <- function(set,classsifier,title, KNN = FALSE, logistic = FALSE) {
+  # not catching the case KNN and logistic both being TRUE ...
   library(ggplot2) ; library(class)
   X1 <- seq(min(set[,1]) - 1, max(set[,1]) + 1, by = 0.02)
   X2 <- seq(min(set[,2]) - 1, max(set[,2]) + 1, by = 0.02)
   grid_set <- expand.grid(X1,X2)
   colnames(grid_set) = c("Age","EstimatedSalary")
   if(KNN) y_grid <- knn(train = set[,-3], test = grid_set, cl = set[,3], 5)
-  if(logistic) y_grid <- predict(classifier, newdata = grid_set, type = "response")
+  else if(logistic) {
+    prob_set <- predict(classifier, type = "response", newdata = grid_set)
+    y_grid <- ifelse(prob_set > 0.5, 1, 0)
+  }
   else y_grid <- predict(classifier, newdata = grid_set, type = "class")
-  
   
   ggplot() +
     geom_point(aes(x = grid_set[,1],y = grid_set[,2]), color = ifelse(y_grid == 1,"springgreen3","tomato")) +

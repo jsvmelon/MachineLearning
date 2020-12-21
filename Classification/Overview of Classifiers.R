@@ -19,7 +19,7 @@ test_set <- subset(dataset, split == FALSE)
 training_set[,1:2] <- scale(training_set[,1:2])
 test_set[,1:2] <- scale(test_set[,1:2])
 
-library(caTools)
+# logistic regression classifier
 classifier <- glm(formula = Purchased ~ ., family = binomial, data = training_set)
 g0a <- display_ggplot2(training_set,classifier,"Logistic (Training Set)",logistic = TRUE)
 g0b <- display_ggplot2(test_set,classifier,"Logistic (Test Set)",logistic = TRUE)
@@ -39,6 +39,7 @@ g2a <- display_ggplot2(training_set,classifier,"Random Forest (Training Set)")
 g2b <- display_ggplot2(test_set,classifier,"Random Forest (Test Set)")
 
 # K-NN classifier
+classifier <- NULL
 g3a <- display_ggplot2(training_set,classifier,"K-NN (Training Set)",TRUE)
 g3b <- display_ggplot2(test_set,classifier,"K-NN (Test Set)",TRUE)
 
@@ -75,8 +76,6 @@ classifier <- svm(formula = Purchased ~ .,
 g6a <- display_ggplot2(training_set,classifier,"SVM - Radial Kernel (Training Set)")
 g6b <- display_ggplot2(test_set,classifier,"SVM - Radial Kernel)(Test Set)")
 
-
-
 library(gridExtra)
 
 grid.arrange(g0a,g0b,
@@ -88,3 +87,6 @@ grid.arrange(g0a,g0b,
              g6a,g6b,
              nrow = 7)
 
+grid.arrange(g0a,g1a,g2a,g3a,g4a,g5a,g6a,
+             g0b,g1b,g2b,g3b,g4b,g5b,g6b,
+             nrow = 2)
