@@ -15,7 +15,7 @@ test_set <- subset(dataset, split == FALSE)
 training_set[,1:2] <- scale(training_set[,1:2])
 test_set[,1:2] <- scale(test_set[,1:2])
 
-# Fitting XY to the training set
+# Fitting Kernel SVM to the training set
 library(e1071)
 classifier <- svm(formula = Purchased ~ .,
                   data = training_set,
