@@ -22,7 +22,7 @@ test_set[,1:2] <- scale(test_set[,1:2])
 library(randomForest)
 classifier <- randomForest(x = training_set[-3],
                            y = training_set$Purchased,
-                           ntree = 10)
+                           ntree = 500)
 
 # normalise predictions to be 0 or 1 instead of the probability
 y_pred <- predict(classifier, newdata = test_set[-3])
