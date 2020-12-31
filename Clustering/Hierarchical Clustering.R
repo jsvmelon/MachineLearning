@@ -20,6 +20,7 @@ library(ggplot2)
 ggplot() + 
   theme_light() + 
   geom_point(aes(x = X$Annual.Income..k.., y = X$Spending.Score..1.100., color = as.factor(y_hc)), shape = y_hc) +
+  geom_text(aes(x = X$Annual.Income..k.., y = X$Spending.Score..1.100., label = c(1:200), color = as.factor(y_hc)), hjust = 0, vjust = -1) +
   stat_ellipse(aes(x = Annual.Income..k.., y = Spending.Score..1.100., color = as.factor(y_hc)),data = X, geom = "path") +
   ylab("Spending Score") + xlab("Annual Income") + labs(color = "Cluster")
   
