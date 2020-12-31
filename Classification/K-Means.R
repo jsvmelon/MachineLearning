@@ -1,4 +1,4 @@
-# Classification
+# Clustering
 
 # Import the dataset
 dataset <- read.csv("Mall_Customers.csv")
