@@ -20,21 +20,29 @@ numbers_of_selections <- integer(d)
 sums_of_rewards <- integer(d)
 total_reward <- 0
 
+###
+# initialisation
+# the upper_bound calculation divides by numbers_of_selections which hence must not be 0
+numbers_of_selections <- unlist(lapply(1:10,FUN = function(x) {
+  numbers_of_selections[x] <- 1
+}))
+
+# because log(1) = 0 the upper bound will be 0 in the first round for all entries unless the average reward is different for any one entry
+sums_of_rewards[sample(1:10,1)] <- 1
+
 for (n in 1:10000) {
   ad <- 0
   max_upper_bound <- 0
   for (i in 1:d) {
-    if (numbers_of_selections[i] > 0) {
-      average_reward <- sums_of_rewards[i] / numbers_of_selections[i]
-      upper_bound <- average_reward + sqrt(3/2 * log(n) / numbers_of_selections[i])
-    } else {
-      upper_bound <- 1e400 # I don't like this "trick" as it complicates understanding the code
-    }
-    if(upper_bound > max_upper_bound) { 
+    average_reward <- sums_of_rewards[i] / numbers_of_selections[i]
+    upper_bound <- average_reward + sqrt(3/2 * log(n) / numbers_of_selections[i])
+
+    if(upper_bound >= max_upper_bound) { 
       max_upper_bound <- upper_bound 
       ad <- i
     }
   }
+  #if (ad == 0) { ad = sample(1:10,1) }
   ads_selected <- append(ads_selected, ad)
   numbers_of_selections[ad] <- numbers_of_selections[ad] + 1
   sums_of_rewards[ad] <- sums_of_rewards[ad] + dataset[n, ad]
@@ -44,7 +52,7 @@ for (n in 1:10000) {
 ###
 # functional approach
 # recursion takes lots of memory and the dataset is too large for this approach
-# I could probably improve it by using global variable from within the function - but that would defeat the purpose
+# I could probably improve it by using global variable from within the function - but that would defeat the purpose imho
 
 source("~/code/Machine Learning A-Z (Codes and Datasets)/Own Code/MachineLearning/Reinforcement Learning/functional UCB.R")
 
