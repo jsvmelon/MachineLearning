@@ -5,33 +5,31 @@ dataset <- read.csv("Ads_CTR_Optimisation.csv")
 
 ###
 # initialisation
-# the upper_bound calculation divides by numbers_of_selections which hence must not be 0
 d <- 10
 ads_selected <- integer()
 numbers_of_rewards_1 <- integer(d)
 numbers_of_rewards_0 <- integer(d)
 total_reward <- 0
+numbers_of_rewards <- as.data.frame(t(data.frame(integer(d),integer(d))))
 
-for (n in 1:10000) {
-  ad <- 0
-  max_random <- 0
-  for (i in 1:d) {
-    random_beta <- rbeta(1, shape1 = numbers_of_rewards_1[i] + 1, shape2 = numbers_of_rewards_0[i] + 1)
-    
-    if(random_beta >= max_random) { 
-      max_random <- random_beta
-      ad <- i
-    }
-  }
+numbers_of_rewards <- Reduce(f = function(numbers_of_rewards, row){
+  # calculate rbeta for all ads; select the ad with maximum rbeta result
+  ad <- which.max(
+    apply(X = numbers_of_rewards, MARGIN = 2, FUN = function(x){
+      rbeta(1, shape1 = x[[1]] + 1, shape2 = x[[2]] + 1)
+    })
+  )
+  
   ads_selected <- append(ads_selected, ad)
-  reward <- dataset[n, ad]
+  reward <- row[ad]
   if (reward == 1) {
-    numbers_of_rewards_1[ad] <- numbers_of_rewards_1[ad] + 1
+    numbers_of_rewards[1,ad] <- numbers_of_rewards[1,ad] + 1
   } else {
-    numbers_of_rewards_0[ad] <- numbers_of_rewards_0[ad] + 1
+    numbers_of_rewards[2,ad] <- numbers_of_rewards[2,ad] + 1
   }
-  total_reward <- total_reward + dataset[n, ad]
-}
+  numbers_of_rewards
+}, x = as.data.frame(t(dataset)), init = numbers_of_rewards)
+total_reward <- sum(numbers_of_rewards[1,])
 
 # visualise
 hist(ads_selected, 
