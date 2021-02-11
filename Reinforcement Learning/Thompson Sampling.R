@@ -7,8 +7,6 @@ dataset <- read.csv("Ads_CTR_Optimisation.csv")
 # initialisation
 d <- 10
 ads_selected <- integer()
-numbers_of_rewards_1 <- integer(d)
-numbers_of_rewards_0 <- integer(d)
 total_reward <- 0
 numbers_of_rewards <- as.data.frame(t(data.frame(integer(d),integer(d))))
 
